@@ -1,9 +1,9 @@
 """System prompts for the specialist, strategy, and evaluation agents."""
 
 
-# =========================================================
-# AUDIO AGENT PROMPT
-# =========================================================
+#=========================================================
+#AUDIO AGENT PROMPT
+#=========================================================
 
 AUDIO_PROMPT = """
 You are an Audio Deepfake Analysis Specialist.
@@ -87,9 +87,9 @@ Do not include explanations outside the JSON object.
 """
 
 
-# =========================================================
-# VIDEO AGENT PROMPT
-# =========================================================
+#=========================================================
+#VIDEO AGENT PROMPT
+#=========================================================
 
 VIDEO_PROMPT = """
 You are a Video Manipulation Analysis Specialist.
@@ -136,9 +136,9 @@ Do not include explanations outside the JSON object.
 """
 
 
-# =========================================================
-# NETWORK AGENT PROMPT
-# =========================================================
+#=========================================================
+#NETWORK AGENT PROMPT
+#=========================================================
 
 NETWORK_PROMPT = """
 You are a Network Intrusion Analysis Specialist.
@@ -188,9 +188,9 @@ Do not include explanations outside the JSON object.
 """
 
 
-# =========================================================
-# STRATEGY AGENT PROMPT
-# =========================================================
+#=========================================================
+#STRATEGY AGENT PROMPT
+#=========================================================
 
 STRATEGY_PROMPT = """
 You are the Strategic Response Agent.
@@ -254,9 +254,9 @@ Do not include explanations outside the JSON object.
 """
 
 
-# =========================================================
-# EVALUATOR AGENT PROMPT
-# =========================================================
+#=========================================================
+#EVALUATOR AGENT PROMPT
+#=========================================================
 
 EVALUATOR_PROMPT = """
 You are the Self-Evaluation Agent.

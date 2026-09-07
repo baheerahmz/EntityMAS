@@ -1,6 +1,6 @@
 """Deterministic tools for indicator extraction and threat scoring."""
 
-from typing import Dict, List, Any
+from typing import Dict, List, Any #import types for the functions
 
 
 def extract_incident_indicators(
@@ -19,9 +19,9 @@ def extract_incident_indicators(
         for each category.
     """
 
-    lowered_text = text.lower()
+    lowered_text = text.lower() #convert the text to lowercase
 
-    audio_keywords = [
+    audio_keywords = [ #list of audio-related keywords
         "audio",
         "voice",
         "speech",
@@ -30,7 +30,7 @@ def extract_incident_indicators(
         "deepfake audio"
     ]
 
-    video_keywords = [
+    video_keywords = [ #list of video-related keywords
         "video",
         "footage",
         "deepfake video",
@@ -39,7 +39,7 @@ def extract_incident_indicators(
         "frame"
     ]
 
-    network_keywords = [
+    network_keywords = [ #list of network-related keywords
         "network",
         "intrusion",
         "login",
@@ -51,46 +51,46 @@ def extract_incident_indicators(
         "password"
     ]
 
-    audio_found = [
+    audio_found = [ #find audio keywords in the incident
         word
         for word in audio_keywords
         if word in lowered_text
     ]
 
-    video_found = [
+    video_found = [ #find video keywords in the incident
         word
         for word in video_keywords
         if word in lowered_text
     ]
 
-    network_found = [
+    network_found = [ #find network keywords in the incident
         word
         for word in network_keywords
         if word in lowered_text
     ]
 
-    return {
-        "audio_detected": bool(audio_found),
-        "video_detected": bool(video_found),
-        "network_detected": bool(network_found),
+    return { #return all detected indicators
+        "audio_detected": bool(audio_found), #check if audio was detected
+        "video_detected": bool(video_found), #check if video was detected
+        "network_detected": bool(network_found), #check if network was detected
 
-        "audio_indicators": audio_found,
-        "video_indicators": video_found,
-        "network_indicators": network_found,
+        "audio_indicators": audio_found, #return audio indicators
+        "video_indicators": video_found, #return video indicators
+        "network_indicators": network_found, #return network indicators
 
-        "audio_evidence": (
+        "audio_evidence": ( #create audio evidence message
             "A suspicious audio-related indicator was detected."
             if audio_found
             else ""
         ),
 
-        "video_evidence": (
+        "video_evidence": ( #create video evidence message
             "A suspicious video-related indicator was detected."
             if video_found
             else ""
         ),
 
-        "network_evidence": (
+        "network_evidence": ( #create network evidence message
             "A suspicious network-related indicator was detected."
             if network_found
             else ""
@@ -114,7 +114,7 @@ def calculate_network_threat_score(
         Integer score between 0 and 100.
     """
 
-    weights = {
+    weights = { #assign a threat weight to each indicator
         "network": 20,
         "intrusion": 30,
         "login": 15,
@@ -126,19 +126,19 @@ def calculate_network_threat_score(
         "password": 20
     }
 
-    score = 0
+    score = 0 #start the threat score at zero
 
-    unique_indicators = set(
+    unique_indicators = set( #remove duplicate indicators
         indicators
     )
 
-    for indicator in unique_indicators:
-        score += weights.get(
+    for indicator in unique_indicators: #check each unique indicator
+        score += weights.get( #add the weight to the score
             indicator,
-            5
+            5 #use 5 if the indicator is not in the weights
         )
 
-    return min(
+    return min( #return the score without exceeding 100
         score,
         100
     )
@@ -168,82 +168,82 @@ def calculate_overall_risk(
         Integer overall risk score between 0 and 100.
     """
 
-    score = 0
+    score = 0 #start the overall score at zero
 
-    audio_risk = audio_result.get(
+    audio_risk = audio_result.get( #get the Audio Agent risk level
         "risk_level"
     )
 
-    video_risk = video_result.get(
+    video_risk = video_result.get( #get the Video Agent risk level
         "risk_level"
     )
 
-    network_risk = network_result.get(
+    network_risk = network_result.get( #get the Network Agent risk level
         "risk_level"
     )
 
-    network_score = network_result.get(
+    network_score = network_result.get( #get the network threat score
         "threat_score",
-        0
+        0 #use zero if no network score exists
     )
 
-    risk_weights = {
+    risk_weights = { #set points for each risk level
         "LOW": 5,
         "MEDIUM": 20,
         "HIGH": 30
     }
 
-    score += risk_weights.get(
+    score += risk_weights.get( #add Audio risk points
         audio_risk,
-        0
+        0 #use zero if no risk level exists
     )
 
-    score += risk_weights.get(
+    score += risk_weights.get( #add Video risk points
         video_risk,
-        0
+        0 #use zero if no risk level exists
     )
 
-    score += risk_weights.get(
+    score += risk_weights.get( #add Network risk points
         network_risk,
-        0
+        0 #use zero if no risk level exists
     )
 
-    # Include 20% of the deterministic
-    # network threat score.
-    score += int(
+    #Include 20% of the deterministic
+    #network threat score.
+    score += int( #add part of the network threat score
         network_score * 0.2
     )
 
-    active_threats = 0
+    active_threats = 0 #count the active threat categories
 
-    if audio_risk in [
+    if audio_risk in [ #check if Audio has an active risk
         "MEDIUM",
         "HIGH"
     ]:
-        active_threats += 1
+        active_threats += 1 #increase the active threat count
 
-    if video_risk in [
+    if video_risk in [ #check if Video has an active risk
         "MEDIUM",
         "HIGH"
     ]:
-        active_threats += 1
+        active_threats += 1 #increase the active threat count
 
-    if network_risk in [
+    if network_risk in [ #check if Network has an active risk
         "MEDIUM",
         "HIGH"
     ]:
-        active_threats += 1
+        active_threats += 1 #increase the active threat count
 
-    # Multiple simultaneous threats indicate a
-    # potentially coordinated attack and therefore
-    # increase the overall operational risk.
-    if active_threats == 2:
-        score += 10
+    #Multiple simultaneous threats indicate a
+    #potentially coordinated attack and therefore
+    #increase the overall operational risk.
+    if active_threats == 2: #check if two threats are active
+        score += 10 #add a coordination penalty
 
-    elif active_threats >= 3:
-        score += 20
+    elif active_threats >= 3: #check if three or more threats are active
+        score += 20 #add a higher coordination penalty
 
-    return min(
+    return min( #return the final score without exceeding 100
         score,
         100
     )

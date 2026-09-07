@@ -1,14 +1,14 @@
 """Fallback-response generation for recoverable system failures."""
 
-import time
-from typing import Dict, Any, List
+import time #import the time module
+from typing import Dict, Any, List #import typing tools
 
 
 def create_fallback_response(
-    errors: List[str],
-    audio_result: Dict[str, Any],
-    video_result: Dict[str, Any],
-    network_result: Dict[str, Any]
+    errors: List[str], #receive the error messages
+    audio_result: Dict[str, Any], #receive the Audio Agent result
+    video_result: Dict[str, Any], #receive the Video Agent result
+    network_result: Dict[str, Any] #receive the Network Agent result
 ) -> Dict[str, Any]:
     """
     Create a safe partial response when one or more
@@ -26,40 +26,40 @@ def create_fallback_response(
         recommendation, errors, and execution time.
     """
 
-    start_time = time.time()
+    start_time = time.time() #record the starting time
 
-    completed = []
+    completed = [] #create a list for completed agents
 
-    if audio_result:
-        completed.append("Audio analysis completed.")
+    if audio_result: #check if Audio Agent completed
+        completed.append("Audio analysis completed.") #add Audio result
 
-    if video_result:
-        completed.append("Video analysis completed.")
+    if video_result: #check if Video Agent completed
+        completed.append("Video analysis completed.") #add Video result
 
-    if network_result:
-        completed.append("Network analysis completed.")
+    if network_result: #check if Network Agent completed
+        completed.append("Network analysis completed.") #add Network result
 
-    if not completed:
-        completed.append(
+    if not completed: #check if no agent completed
+        completed.append( #add a message when no result is available
             "No specialist analysis was successfully completed."
         )
 
-    elapsed_time = time.time() - start_time
+    elapsed_time = time.time() - start_time #calculate the execution time
 
-    return {
-        "status": "PARTIAL",
+    return { #return the fallback response
+        "status": "PARTIAL", #set the status as partial
 
-        "risk_warning":
+        "risk_warning": #add a warning about the system failure
             "Fallback activated because a system component failed.",
 
-        "errors": errors,
+        "errors": errors, #include the captured errors
 
-        "available_results": completed,
+        "available_results": completed, #include the available results
 
-        "recommendation":
+        "recommendation": #provide a safe recommendation
             "Treat the incident as high risk, preserve available evidence, "
             "contain affected systems, and escalate for manual review.",
 
-        "fallback_execution_time":
-            round(elapsed_time, 4)
+        "fallback_execution_time": #include the fallback execution time
+            round(elapsed_time, 4) #round the time to 4 decimal places
     }
